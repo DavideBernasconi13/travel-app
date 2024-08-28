@@ -20,7 +20,7 @@
                             "image": "images/colosseo.avif",
                             "notes": "Acquistare i biglietti in anticipo per evitare le code.",
                             "rating": 5,
-                            "completed": false
+                            "completed": true
                         }
                     ]
                 },
