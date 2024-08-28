@@ -17,50 +17,7 @@
                                 "latitude": 41.8902,
                                 "longitude": 12.4922
                             },
-                            "image": "images/colosseo.jpg",
-                            "notes": "Acquistare i biglietti in anticipo per evitare le code.",
-                            "rating": 5,
-                            "completed": false
-                        }
-                    ]
-                },
-                {
-                    "date": "2024-09-02",
-                    "stops": [
-                        {
-                            "title": "Firenze",
-                            "description": "Giro della città e visita alla Galleria degli Uffizi.",
-                            "location": {
-                                "latitude": 43.7696,
-                                "longitude": 11.2558
-                            },
-                            "image": "images/uffizi.jpg",
-                            "notes": "Assaggiare il gelato vicino al Duomo.",
-                            "rating": 4,
-                            "completed": false
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "id": 2,
-            "title": "Viaggio alle 5 terre",
-            "description": "Un fantastico tour delle cinque terre",
-            "startDate": "2024-09-15",
-            "endDate": "2024-09-20",
-            "days": [
-                {
-                    "date": "2024-09-01",
-                    "stops": [
-                        {
-                            "title": "Roma",
-                            "description": "Visita al Colosseo e al Foro Romano.",
-                            "location": {
-                                "latitude": 41.8902,
-                                "longitude": 12.4922
-                            },
-                            "image": "images/colosseo.jpg",
+                            "image": "images/colosseo.avif",
                             "notes": "Acquistare i biglietti in anticipo per evitare le code.",
                             "rating": 5,
                             "completed": false

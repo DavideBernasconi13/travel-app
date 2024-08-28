@@ -17,46 +17,71 @@
 
 <body>
 
-  <div class="container">
-    <h1 class="mt-5">Travel Planner</h1>
-
-    <!-- Sezione per la lista dei viaggi -->
-    <div id="trip-list" class="mt-4">
-      <h2>Your Trips</h2>
-      <div class="list-group" id="trips">
-        <!-- I viaggi saranno inseriti qui da JavaScript -->
+  <header class="bg-primary text-center text-light p-4">
+    <!-- <div class="container">
+      <h1 class="mt-5">Travel Planner</h1>
+    </div> -->
+  </header>
+  <div class="px-4 py-5 my-5 text-center">
+    <img class="d-block mx-auto mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+    <h1 class="display-5 fw-bold">Travel planner</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most
+        popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive
+        prebuilt components, and powerful JavaScript plugins.</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Primary button</button>
+        <button type="button" class="btn btn-outline-secondary btn-lg px-4">Secondary</button>
       </div>
+    </div>
+  </div>
+  <div class="container mt-5">
+
+
+    <!-- Dropdown per la lista dei viaggi -->
+    <div class="dropdown">
+      <button class="btn btn-primary dropdown-toggle" type="button" id="tripDropdown" data-bs-toggle="dropdown"
+        aria-expanded="false">
+        Select a Trip
+      </button>
+      <ul class="dropdown-menu" id="tripList" aria-labelledby="tripDropdown">
+        <!-- I viaggi saranno inseriti qui da JavaScript -->
+      </ul>
     </div>
 
     <!-- Sezione dettagli del viaggio -->
     <div id="trip-details" class="mt-5 d-none">
-      <h2>Trip Details</h2>
-      <div id="trip-info">
-        <!-- Modal per visualizzare l'immagine della tappa -->
-        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="imageModalLabel">Stop Image</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <img id="stopImage" src="" class="img-fluid" alt="Stop Image">
-              </div>
-            </div>
+      <div class="row trip-title text-center">
+
+      </div>
+      <div class="row">
+        <!-- trip details -->
+        <div class="col-md-6">
+          <h2>Trip Details</h2>
+          <div id="trip-info">
+
           </div>
         </div>
-        
-
+        <!-- trip steps -->
+        <div class="col-md-6">
+          <h2>Le tappe</h2>
+          <!-- Steps -->
+          <div id="stops-cards" class="row mt-4">
+            <!-- Le card delle tappe saranno inserite qui da JavaScript -->
+          </div>
+        </div>
       </div>
 
       <div id="map" class="mt-4"></div>
     </div>
   </div>
 
+
+
   <script src="js/app.js"></script>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
