@@ -50,15 +50,15 @@ document.addEventListener('DOMContentLoaded', () => {
     days.forEach(day => {
       day.stops.forEach(stop => {
         const stopCard = document.createElement('div');
-        stopCard.className = 'col-md-4 mb-4';
+        stopCard.className = 'col-md-6 mb-6 tappe';
 
         stopCard.innerHTML = `
-          <div class="card w-100">
+          <div class="card h-100">
             <img src="${stop.image}" class="card-img-top" alt="${stop.title}">
             <div class="card-body">
               <h5 class="card-title">${stop.title}</h5>
               <p class="card-text">${stop.description}</p>
-              <button class="btn btn-primary" onclick="showStopDetailsModal('${stop.title}', '${stop.description}', '${stop.image}', '${stop.notes}', '${stop.rating}')">Dettagli</button>
+              <button class="btn btn-secondary" onclick="showStopDetailsModal('${stop.title}', '${stop.description}', '${stop.image}', '${stop.notes}', '${stop.rating}')">Dettagli</button>
             </div>
           </div>
         `;
