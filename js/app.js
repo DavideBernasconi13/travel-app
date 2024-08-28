@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(response => response.json())
     .then(data => {
       currentTripData = data; // Salva i dati del viaggio corrente per modifiche future
+      console.log(data);
       const trips = data.trips;
 
       // Popola il dropdown con i viaggi
@@ -85,11 +86,13 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
     //Modal footer
     const modalFooter = `
+    <div class="btn-group">
+    <button class="btn btn-outline-danger" onclick="editStop(${dayIndex}, ${stopIndex})">Modifica</button>
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-    <button class="btn btn-secondary mt-3" onclick="editStop(${dayIndex}, ${stopIndex})">Modifica</button>
+    </div>
     `
 
-    document.querySelector('.modal-footer').innerHTML = modalFooter; 
+    document.querySelector('.modal-footer').innerHTML = modalFooter;
     document.getElementById('modalContent').innerHTML = modalContent;
 
     // Mostra la modal
@@ -105,14 +108,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Aggiorna il JSON e salvalo
     console.log(`Tappa ${trip.days[dayIndex].stops[stopIndex].title} aggiornata a completato: ${isCompleted}`);
 
-     // Persisti l'aggiornamento nel localStorage
-     saveTripsToLocalStorage(currentTripData);
+    // Persisti l'aggiornamento nel localStorage
+    saveTripsToLocalStorage(currentTripData);
+    // Aggiorna l'interfaccia utente per riflettere le modifiche
+    showTripDetails(trip);
   };
 
   function saveTripsToLocalStorage(tripData) {
     localStorage.setItem('tripsData', JSON.stringify(tripData));
   }
-  
+
   // // Quando carichi l'app, controlla se ci sono dati salvati nel localStorage
   // document.addEventListener('DOMContentLoaded', () => {
   //   const savedTrips = localStorage.getItem('tripsData');
@@ -129,29 +134,29 @@ document.addEventListener('DOMContentLoaded', () => {
   //       });
   //   }
   // });
- 
-  // Carica i dati dal localStorage al caricamento della pagina
-document.addEventListener('DOMContentLoaded', () => {
-  const savedTrips = localStorage.getItem('tripsData');
-  if (savedTrips) {
-    currentTripData = JSON.parse(savedTrips);
-  } else {
-    // Se non ci sono dati salvati, carica i dati dal JSON iniziale
-    fetch('data/trips.json')
-      .then(response => response.json())
-      .then(data => {
-        currentTripData = data;
-        saveTripsToLocalStorage(currentTripData); // Salva i dati iniziali nel localStorage
-      });
-  }
 
-  // Inizializza l'applicazione con i dati caricati
-  initializeApp(currentTripData);
-});
-  
+  // Carica i dati dal localStorage al caricamento della pagina
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedTrips = localStorage.getItem('tripsData');
+    if (savedTrips) {
+      currentTripData = JSON.parse(savedTrips);
+    } else {
+      // Se non ci sono dati salvati, carica i dati dal JSON iniziale
+      fetch('data/trips.json')
+        .then(response => response.json())
+        .then(data => {
+          currentTripData = data;
+          saveTripsToLocalStorage(currentTripData); // Salva i dati iniziali nel localStorage
+        });
+    }
+
+    // Inizializza l'applicazione con i dati caricati
+    initializeApp(currentTripData);
+  });
+
   function initializeApp(data) {
     const trips = data.trips;
-  
+
     // Popola il dropdown con i viaggi
     trips.forEach(trip => {
       const tripItem = document.createElement('li');
@@ -164,6 +169,57 @@ document.addEventListener('DOMContentLoaded', () => {
       tripListElement.appendChild(tripItem);
     });
   }
+
+  // Funzione per aprire il modulo di modifica della tappa
+  window.editStop = (dayIndex, stopIndex) => {
+    const stop = currentTripData.trips[0].days[dayIndex].stops[stopIndex];
+
+    const editFormContent = `
+    <div class="mb-3">
+      <label for="editTitle" class="form-label">Titolo</label>
+      <input type="text" class="form-control" id="editTitle" value="${stop.title}">
+    </div>
+    <div class="mb-3">
+      <label for="editDescription" class="form-label">Descrizione</label>
+      <textarea class="form-control" id="editDescription">${stop.description}</textarea>
+    </div>
+    <div class="mb-3">
+      <label for="editNotes" class="form-label">Note</label>
+      <textarea class="form-control" id="editNotes">${stop.notes}</textarea>
+    </div>
+    <div class="mb-3">
+      <label for="editRating" class="form-label">Valutazione</label>
+      <input type="number" class="form-control" id="editRating" value="${stop.rating}" min="1" max="5">
+    </div>
+    <div class="mb-3">
+      <label for="editImage" class="form-label">Immagine</label>
+      <input type="text" class="form-control" id="editImage" value="${stop.image}">
+    </div>
+    <button class="btn btn-primary" onclick="saveStopChanges(${dayIndex}, ${stopIndex})">Salva</button>
+    <button class="btn btn-secondary" onclick="showStopDetailsModal('${stop.title}', '${stop.description}', '${stop.image}', '${stop.notes}', '${stop.rating}', ${stop.completed}, ${dayIndex}, ${stopIndex})">Annulla</button>
+  `;
+
+    document.getElementById('modalContent').innerHTML = editFormContent;
+  };
+
+  // Funzione per salvare le modifiche della tappa
+  window.saveStopChanges = (dayIndex, stopIndex) => {
+    const trip = currentTripData.trips[0]; // Supponiamo di lavorare con il primo viaggio
+    const stop = trip.days[dayIndex].stops[stopIndex];
+
+    // Recupera i nuovi valori dal modulo
+    stop.title = document.getElementById('editTitle').value;
+    stop.description = document.getElementById('editDescription').value;
+    stop.notes = document.getElementById('editNotes').value;
+    stop.rating = parseInt(document.getElementById('editRating').value);
+    stop.image = document.getElementById('editImage').value;
+
+    // Salva i dati aggiornati nel localStorage
+    saveTripsToLocalStorage(currentTripData);
+
+    // Aggiorna l'interfaccia utente per riflettere le modifiche
+    showStopDetailsModal(stop.title, stop.description, stop.image, stop.notes, stop.rating, stop.completed, dayIndex, stopIndex);
+  };
 
 
 
