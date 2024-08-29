@@ -40,6 +40,23 @@
                             "completed": false
                         }
                     ]
+                },
+                {
+                    "date": "2024-09-02",
+                    "stops": [
+                        {
+                            "title": "Rovello Porro",
+                            "description": "Giro della città e visita alla Galleria degli Uffizi.",
+                            "location": {
+                                "latitude": 45.6512477,
+                                "longitude": 9.0403365
+                            },
+                            "image": "https://www.varesenews.it/photogallery_new/images/2022/06/generico-20-jun-2022-1314881.610x431.jpg",
+                            "notes": "Assaggiare il gelato vicino al Duomo.",
+                            "rating": 4,
+                            "completed": false
+                        }
+                    ]
                 }
             ]
         }

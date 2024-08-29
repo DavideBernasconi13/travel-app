@@ -5,31 +5,54 @@ document.addEventListener('DOMContentLoaded', () => {
   const tripTitle = document.querySelector('.trip-title');
   const stopsCardsElement = document.getElementById('stops-cards');
 
-  // Carica i dati dal file JSON
-  fetch('data/trips.json')
-    .then(response => response.json())
-    .then(data => {
-      currentTripData = data; // Salva i dati del viaggio corrente per modifiche future
-      console.log(data);
-      const trips = data.trips;
+  let currentTripData;
 
-      // Popola il dropdown con i viaggi
-      trips.forEach(trip => {
-        const tripItem = document.createElement('li');
-        const tripLink = document.createElement('a');
-        tripLink.className = 'dropdown-item';
-        tripLink.textContent = trip.title;
-        tripLink.href = '#';
-        tripLink.onclick = () => showTripDetails(trip);
-        tripItem.appendChild(tripLink);
-        tripListElement.appendChild(tripItem);
-      });
-    })
-    .catch(error => console.error('Error fetching trips:', error));
+  // Carica i dati dal localStorage o dal file JSON se il localStorage è vuoto
+  function initializeApp() {
+    const savedTrips = localStorage.getItem('tripsData');
+    if (savedTrips) {
+      currentTripData = JSON.parse(savedTrips);
+      populateTripDropdown(currentTripData.trips);
+    } else {
+      // Fetch dei dati dal file JSON iniziale
+      fetch('data/trips.json')
+        .then(response => response.json())
+        .then(data => {
+          currentTripData = data;
+          saveTripsToLocalStorage(currentTripData); // Salva i dati nel localStorage
+          populateTripDropdown(currentTripData.trips);
+        })
+        .catch(error => console.error('Error fetching trips:', error));
+    }
+  }
+
+  // Salva i dati nel localStorage
+  function saveTripsToLocalStorage(tripData) {
+    localStorage.setItem('tripsData', JSON.stringify(tripData));
+  }
+
+  // Popola il dropdown con i viaggi
+  function populateTripDropdown(trips) {
+    tripListElement.innerHTML = ''; // Pulisce il dropdown esistente
+
+    trips.forEach((trip, index) => {
+      const tripItem = document.createElement('li');
+      const tripLink = document.createElement('a');
+      tripLink.className = 'dropdown-item';
+      tripLink.textContent = trip.title;
+      tripLink.href = '#';
+      tripLink.onclick = () => showTripDetails(trip);
+      tripItem.appendChild(tripLink);
+      tripListElement.appendChild(tripItem);
+    });
+
+    // Mostra i dettagli del primo viaggio per default
+    if (trips.length > 0) showTripDetails(trips[0]);
+  }
 
   // Mostra i dettagli del viaggio
   function showTripDetails(trip) {
-    tripTitle.innerHTML = `<h3>${trip.title}</h3>`
+    tripTitle.innerHTML = `<h3>${trip.title}</h3>`;
     tripInfoElement.innerHTML = `
       <p>${trip.description}</p>
       <p><strong>Start Date:</strong> ${trip.startDate}</p>
@@ -45,20 +68,21 @@ document.addEventListener('DOMContentLoaded', () => {
     generateStopCards(trip.days);
   }
 
+  // Genera le card per ogni tappa
   function generateStopCards(days) {
     stopsCardsElement.innerHTML = ''; // Pulisce l'elemento per evitare duplicati
 
     days.forEach((day, dayIndex) => { // Itera attraverso i giorni
       day.stops.forEach((stop, stopIndex) => { // Itera attraverso le tappe del giorno
         const stopCard = document.createElement('div');
-        stopCard.className = 'col-md-6 mb-6';
+        stopCard.className = 'col-md-6 mb-4';
 
         stopCard.innerHTML = `
           <div class="card h-100">
             <img src="${stop.image}" class="card-img-top" alt="${stop.title}">
             <div class="card-body">
               <h5 class="card-title">${stop.title}</h5>
-              <p class="card-text">${stop.description} | ${stop.completed}</p>
+              <p class="card-text">${stop.description} | ${stop.completed ? 'Completato' : 'Non completato'}</p>
               
               <button class="btn btn-primary" onclick="showStopDetailsModal('${stop.title}', '${stop.description}', '${stop.image}', '${stop.notes}', '${stop.rating}', ${stop.completed}, ${dayIndex}, ${stopIndex})">Dettagli</button>
             </div>
@@ -69,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
   // Funzione per mostrare i dettagli della tappa nella modal
   window.showStopDetailsModal = (title, description, image, notes, rating, completed, dayIndex, stopIndex) => {
     const modalContent = `
@@ -82,20 +107,18 @@ document.addEventListener('DOMContentLoaded', () => {
       <input class="form-check-input" type="checkbox" id="completedSwitch" ${completed ? 'checked' : ''} onchange="toggleCompletion(${dayIndex}, ${stopIndex}, this.checked)">
       <label class="form-check-label" for="completedSwitch">Segna come completato</label>
     </div>
-    
   `;
-    //Modal footer
+
     const modalFooter = `
     <div class="btn-group">
-    <button class="btn btn-outline-danger" onclick="editStop(${dayIndex}, ${stopIndex})">Modifica</button>
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+      <button class="btn btn-outline-danger" onclick="editStop(${dayIndex}, ${stopIndex})">Modifica</button>
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
     </div>
-    `
+  `;
 
     document.querySelector('.modal-footer').innerHTML = modalFooter;
     document.getElementById('modalContent').innerHTML = modalContent;
 
-    // Mostra la modal
     const stopDetailModal = new bootstrap.Modal(document.getElementById('stopDetailModal'));
     stopDetailModal.show();
   };
@@ -105,70 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const trip = currentTripData.trips[0]; // Supponiamo che stiamo lavorando con il primo viaggio
     trip.days[dayIndex].stops[stopIndex].completed = isCompleted;
 
-    // Aggiorna il JSON e salvalo
-    console.log(`Tappa ${trip.days[dayIndex].stops[stopIndex].title} aggiornata a completato: ${isCompleted}`);
-
     // Persisti l'aggiornamento nel localStorage
     saveTripsToLocalStorage(currentTripData);
+
     // Aggiorna l'interfaccia utente per riflettere le modifiche
     showTripDetails(trip);
   };
-
-  function saveTripsToLocalStorage(tripData) {
-    localStorage.setItem('tripsData', JSON.stringify(tripData));
-  }
-
-  // // Quando carichi l'app, controlla se ci sono dati salvati nel localStorage
-  // document.addEventListener('DOMContentLoaded', () => {
-  //   const savedTrips = localStorage.getItem('tripsData');
-  //   if (savedTrips) {
-  //     currentTripData = JSON.parse(savedTrips);
-  //     // Continua con il resto della logica usando currentTripData
-  //   } else {
-  //     // Codice per fetch di JSON iniziale se non ci sono dati salvati
-  //     fetch('data/trips.json')
-  //       .then(response => response.json())
-  //       .then(data => {
-  //         currentTripData = data;
-  //         initializeApp(currentTripData);
-  //       });
-  //   }
-  // });
-
-  // Carica i dati dal localStorage al caricamento della pagina
-  document.addEventListener('DOMContentLoaded', () => {
-    const savedTrips = localStorage.getItem('tripsData');
-    if (savedTrips) {
-      currentTripData = JSON.parse(savedTrips);
-    } else {
-      // Se non ci sono dati salvati, carica i dati dal JSON iniziale
-      fetch('data/trips.json')
-        .then(response => response.json())
-        .then(data => {
-          currentTripData = data;
-          saveTripsToLocalStorage(currentTripData); // Salva i dati iniziali nel localStorage
-        });
-    }
-
-    // Inizializza l'applicazione con i dati caricati
-    initializeApp(currentTripData);
-  });
-
-  function initializeApp(data) {
-    const trips = data.trips;
-
-    // Popola il dropdown con i viaggi
-    trips.forEach(trip => {
-      const tripItem = document.createElement('li');
-      const tripLink = document.createElement('a');
-      tripLink.className = 'dropdown-item';
-      tripLink.textContent = trip.title;
-      tripLink.href = '#';
-      tripLink.onclick = () => showTripDetails(trip);
-      tripItem.appendChild(tripLink);
-      tripListElement.appendChild(tripItem);
-    });
-  }
 
   // Funzione per aprire il modulo di modifica della tappa
   window.editStop = (dayIndex, stopIndex) => {
@@ -219,10 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Aggiorna l'interfaccia utente per riflettere le modifiche
     showStopDetailsModal(stop.title, stop.description, stop.image, stop.notes, stop.rating, stop.completed, dayIndex, stopIndex);
+    //ricarica la pagina
+    window.location.reload()
   };
-
-
-
 
   // Inizializza la mappa utilizzando Leaflet
   function initMap(days) {
@@ -241,4 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
+  // Inizializza l'applicazione
+  initializeApp();
 });
