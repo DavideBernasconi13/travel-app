@@ -1,5 +1,5 @@
 .my-hero {
-    background: url('images/colosseo.avif');
+    background: url('../images/colosseo.avif');
     background-position: center center;
     background-repeat: no-repeat;
     height: 40vh;
@@ -17,7 +17,16 @@
     box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
 }
 
+.cu-h {
+    max-height: 250px;
+    overflow: hidden;
+}
+
 /* Utility */
-.debug {
+/* .debug {
     border: 1px solid red;
 }
+
+.debug-2 {
+    border: 2px solid green;
+} */
