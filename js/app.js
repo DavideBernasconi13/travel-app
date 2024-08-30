@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Mostra i dettagli del primo viaggio per default
-    if (trips.length > 0) showTripDetails(trips[0]);
+    //if (trips.length > 0) showTripDetails(trips[0]);
   }
 
   // Mostra i dettagli del viaggio
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <h5 class="card-title">${stop.title}</h5>
               <p class="card-text">${stop.description} | ${stop.completed ? 'Completato' : 'Non completato'}</p>
               
-              <button class="btn btn-primary" onclick="showStopDetailsModal('${stop.title}', '${stop.description}', '${stop.image}', '${stop.notes}', '${stop.rating}', ${stop.completed}, ${dayIndex}, ${stopIndex})">Dettagli</button>
+              <button class="btn btn-primary w-100" onclick="showStopDetailsModal('${stop.title}', '${stop.description}', '${stop.image}', '${stop.notes}', '${stop.rating}', ${stop.completed}, ${dayIndex}, ${stopIndex})">Dettagli</button>
             </div>
           </div>
         `;
