@@ -1,5 +1,5 @@
 .my-hero {
-    background: url('../images/colosseo.avif');
+    background: url('/../images/colosseo.avif');
     background-position: center center;
     background-repeat: no-repeat;
     height: 40vh;
