@@ -75,11 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
     days.forEach((day, dayIndex) => { // Itera attraverso i giorni
       day.stops.forEach((stop, stopIndex) => { // Itera attraverso le tappe del giorno
         const stopCard = document.createElement('div');
-        stopCard.className = 'col-md-6 mb-4';
+        stopCard.className = 'col-md-4 mb-4';
 
         stopCard.innerHTML = `
           <div class="card h-100">
-            <img src="${stop.image}" class="card-img-top rounded-0" alt="${stop.title}">
+            <img src="${stop.image}" class="card-img-top rounded-0 h-100" alt="${stop.title}">
             <div class="card-body">
               <h5 class="card-title">${stop.title}</h5>
               <p class="card-text">${stop.description}</p>
