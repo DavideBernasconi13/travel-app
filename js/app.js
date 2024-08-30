@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Mostra i dettagli del primo viaggio per default
-    //if (trips.length > 0) showTripDetails(trips[0]);
+    if (trips.length > 0) showTripDetails(trips[0]);
   }
 
   // Mostra i dettagli del viaggio
@@ -82,7 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <img src="${stop.image}" class="card-img-top" alt="${stop.title}">
             <div class="card-body">
               <h5 class="card-title">${stop.title}</h5>
-              <p class="card-text">${stop.description} | ${stop.completed ? 'Completato' : 'Non completato'}</p>
+              <p class="card-text">${stop.description}</p>
+              <p id="completedStatusCard">${stop.completed ? 'Completato' : 'Non completato'}</p>
               
               <button class="btn btn-primary w-100" onclick="showStopDetailsModal('${stop.title}', '${stop.description}', '${stop.image}', '${stop.notes}', '${stop.rating}', ${stop.completed}, ${dayIndex}, ${stopIndex})">Dettagli</button>
             </div>
@@ -101,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <p>${description}</p>
     <p><strong>Note:</strong> ${notes}</p>
     <p><strong>Rating:</strong> ${rating} stelle</p>
-    <p><strong>Completato:</strong> ${completed ? 'Sì' : 'No'}</p>
+    <p><strong>Completato:</strong><span id="completedStatus"> ${completed ? 'Sì' : 'No'}</span></p>
     <img src="${image}" alt="${title}" class="img-fluid">
     <div class="form-check form-switch mt-3">
       <input class="form-check-input" type="checkbox" id="completedSwitch" ${completed ? 'checked' : ''} onchange="toggleCompletion(${dayIndex}, ${stopIndex}, this.checked)">
@@ -131,8 +132,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Persisti l'aggiornamento nel localStorage
     saveTripsToLocalStorage(currentTripData);
 
+    // Aggiorno i valori della modale e nella card
+    document.getElementById('completedStatus').textContent = isCompleted ? 'Sì' : 'No';
+    document.getElementById('completedStatusCard').textContent = isCompleted ? 'Completato' : 'Non completatato';
+
     // Aggiorna l'interfaccia utente per riflettere le modifiche
     showTripDetails(trip);
+
+
   };
 
   // Funzione per aprire il modulo di modifica della tappa
